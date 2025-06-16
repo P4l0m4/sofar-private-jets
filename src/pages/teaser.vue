@@ -50,14 +50,14 @@ useHead({
 });
 
 useJsonld(() => ({
-  "@context": "https://schema.org/",
+  "@context": "https://schema.org",
   "@type": "WebSite",
   name: `Teaser | ${story.value.content.title}`,
   url: window.location.href,
 }));
 
 useJsonld(() => ({
-  "@context": "https://schema.org/",
+  "@context": "https://schema.org",
   "@type": "Event",
   name: `Teaser | ${story.value.content.title}`,
   url: window.location.href,

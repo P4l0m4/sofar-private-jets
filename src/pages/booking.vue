@@ -302,7 +302,10 @@ const breadcrumbs = [
   }
 
   & h2 {
+    font-size: 1rem;
+
     @media (min-width: $big-tablet-screen) {
+      font-size: $subtitles;
       margin-top: -1rem;
     }
   }
@@ -311,6 +314,7 @@ const breadcrumbs = [
   & h2 {
     color: $text-color-alt;
     z-index: 1;
+    text-wrap: balance;
   }
 
   &__map {

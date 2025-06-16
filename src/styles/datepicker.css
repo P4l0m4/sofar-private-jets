@@ -112,7 +112,7 @@
 }
 .dp__menu {
   background: var(--dp-background-color);
-  border-radius: var(--dp-border-radius);
+  border-radius: calc(var(--dp-border-radius) / 2);
   min-width: var(--dp-menu-min-width);
   font-family: var(--dp-font-family);
   font-size: var(--dp-font-size);

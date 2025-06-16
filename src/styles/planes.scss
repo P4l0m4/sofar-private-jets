@@ -77,6 +77,7 @@
     }
   }
 }
+
 .plane-info-horizontal {
   display: flex;
   flex-direction: column;
@@ -287,6 +288,7 @@
     padding: 2rem;
     gap: 2rem;
   }
+
   &::before {
     content: "";
     position: absolute;
@@ -296,16 +298,6 @@
     background-color: $text-color;
     z-index: -1;
   }
-  // &::after {
-  //   content: "";
-  //   position: absolute;
-  //   inset: 0;
-  //   width: 100%;
-  //   height: 100%;
-  //   background-image: linear-gradient(45deg, $primary-color, transparent 100%);
-  //   z-index: -1;
-  //   opacity: 0.2;
-  // }
 
   & source {
     display: none;
@@ -326,17 +318,23 @@
       inset: 2rem;
       bottom: inherit;
       gap: 2rem;
-      padding-right: 12rem;
+      padding-right: 11rem;
+      justify-content: space-between;
     }
 
     &__logo {
       width: fit-content;
       height: fit-content;
       margin: auto;
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 0.005rem;
+      margin: auto;
 
       & img {
         width: 60px;
-        height: 60px;
+        height: 40px;
 
         @media (min-width: $big-tablet-screen) {
           width: 150px;
@@ -344,6 +342,7 @@
         }
       }
     }
+
     &__subtitle {
       color: $text-color-alt;
       line-height: 1.6rem;
@@ -380,7 +379,6 @@
   }
 
   &__title {
-    // white-space: nowrap;
     display: flex;
     line-height: 2.5rem;
     color: $text-color-alt;
