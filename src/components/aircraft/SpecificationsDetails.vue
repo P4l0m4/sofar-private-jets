@@ -91,6 +91,10 @@ defineProps<{
     color: $text-color-alt;
     width: 100%;
 
+    @media (min-width: $big-tablet-screen) {
+      max-width: 800px;
+    }
+
     &__title {
       display: flex;
       align-items: center;
@@ -140,6 +144,14 @@ defineProps<{
     width: 100%;
     object-fit: cover;
     object-position: center;
+
+    @media (min-width: $big-tablet-screen) {
+      max-width: 600px;
+    }
+
+    @media (min-width: $desktop-screen) {
+      max-width: 800px;
+    }
 
     &__reverse {
       order: -1;

@@ -100,10 +100,9 @@ useJsonld(() => ({
     <div class="index__banner__headlines">
       <NuxtLink
         class="button-primary--dark rounded-button"
-        to="/booking"
-        v-if="desktopScreen"
+        :to="desktopScreen ? '/booking' : '/request-a-charter'"
         style="z-index: 1"
-        >Booking</NuxtLink
+        >{{ !desktopScreen ? "Fly" : "Booking" }}</NuxtLink
       >
 
       <NuxtLink class="index__banner__headlines__logo" to="/">

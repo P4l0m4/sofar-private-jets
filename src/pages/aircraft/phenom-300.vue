@@ -71,7 +71,7 @@ onMounted(() => {
     <div class="services-banner__headlines">
       <NuxtLink
         class="button-primary--dark rounded-button"
-        to="/booking"
+        :to="desktopScreen ? '/booking' : '/request-a-charter'"
         style="z-index: 1"
         >{{ !desktopScreen ? "Fly" : "Booking" }}</NuxtLink
       >

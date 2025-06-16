@@ -86,7 +86,7 @@ useJsonld(() => ({
       alt="sofar jet charter banner image" />
   </picture>
 
-  <HomeWelcomeToSofar />
+ <PrivateJetCharter mode="light"/>
 
    <section class="image-with-text">
     <img class="image-with-text__full-width-image" src="@/assets/images/our-story/founder-ceo-sofar.webp" alt="private jet charter sofar" />

@@ -91,9 +91,9 @@ function onError(e: Event) {
     <div class="services-banner__headlines">
       <NuxtLink
         class="button-primary--dark rounded-button"
-        to="/booking"
-        v-if="desktopScreen"
-        >Booking</NuxtLink
+        :to="desktopScreen ? '/booking' : '/request-a-charter'"
+        style="z-index: 1"
+        >{{ !desktopScreen ? "Fly" : "Booking" }}</NuxtLink
       >
       <NuxtLink class="services-banner__headlines__logo" to="/">
         <img src="@/assets/images/logo-light.svg"

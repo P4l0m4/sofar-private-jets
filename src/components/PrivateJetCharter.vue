@@ -1,10 +1,39 @@
+<script setup lang="ts">
+import { colors } from "@/utils/colors";
+
+interface Props {
+  mode: "light" | "dark";
+}
+
+withDefaults(defineProps<Props>(), {
+  mode: "dark",
+});
+</script>
 <template>
-  <section class="private-jet-charter">
-    <div class="private-jet-charter__headlines">
+  <section
+    class="private-jet-charter"
+    :style="{
+      backgroundColor:
+        mode === 'dark' ? colors['secondary-color'] : colors['primary-color'],
+    }"
+  >
+    <div
+      class="private-jet-charter__headlines"
+      :style="{
+        color:
+          mode === 'dark' ? colors['primary-color'] : colors['secondary-color'],
+      }"
+    >
       <h2 class="titles">Private Jet Charter</h2>
       <span class="subtitles">Make it Anywhere</span>
     </div>
-    <p class="paragraphs">
+    <p
+      class="paragraphs"
+      :style="{
+        color:
+          mode === 'dark' ? colors['primary-color'] : colors['secondary-color'],
+      }"
+    >
       Founded in 2019, Sofar has grown from humble beginnings to become a
       trusted name in private aviation. Operating from New York, Miami, and Los
       Angeles, we offer bespoke flights tailored to meet the unique needs of
@@ -14,7 +43,14 @@
       leisure, every journey reflects our dedication to providing personalized
       and reliable experiences.
     </p>
-    <NuxtLink class="button-primary--light" to="/our-story">Our story</NuxtLink>
+    <NuxtLink
+      :class="{
+        'button-primary--light': mode === 'dark',
+        'button-primary--dark': mode === 'light',
+      }"
+      to="/our-story"
+      >Our story</NuxtLink
+    >
   </section>
 </template>
 <style lang="scss" scoped>
@@ -57,7 +93,8 @@
     }
   }
 
-  .button-primary--light {
+  .button-primary--light,
+  .button-primary--dark {
     width: 100%;
     max-width: 250px;
   }

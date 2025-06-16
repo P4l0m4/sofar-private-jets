@@ -454,6 +454,7 @@ window.addEventListener("scroll", function () {
         font-weight: $skinny-thick;
         transition: background-color 0.3s linear;
         padding: 1rem;
+        width: 100%;
 
         @media (min-width: $tablet-screen) {
           padding: 1rem 2rem;
