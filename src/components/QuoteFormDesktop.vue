@@ -1,18 +1,18 @@
 <script setup>
-import { ref, reactive, onMounted } from "vue";
+import { ref, reactive, onMounted, computed } from "vue";
 import phoneCodes from "@/utils/phoneCodes.json";
 import dayjs from "dayjs";
 import { useVuelidate } from "@vuelidate/core";
 import emailjs from "@emailjs/browser";
 import { debounce } from "@/utils/debounce";
 import { normalizeString } from "@/utils/normalize";
+import { colors } from "@/utils/colors";
 
 import {
   required,
   minLength,
   maxLength,
   email,
-  requiredIf,
   minValue,
   maxValue,
 } from "@vuelidate/validators";
@@ -43,12 +43,13 @@ const phoneCodesList = computed(() => {
     (code) => code.abbreviation !== selectedPhoneCode.value.abbreviation
   );
 });
-const isRoundTrip = ref(false);
+const isRoundTrip = computed(() => {
+  return flightState.returnDate !== "" && flightState.returnDate !== null;
+});
 const currentStep = ref(0);
 const isSubmitting = ref(false);
 const wasSent = ref(false);
 
-//const todaysDate = dayjs().format("YYYY-MM-DDTHH:mm");
 const todaysDatePlusTwoHours = dayjs()
   .add(2, "hour")
   .format("YYYY-MM-DDTHH:mm");
@@ -99,14 +100,6 @@ const templateParams = computed(() => ({
   countryCode: selectedPhoneCode.value.code,
   info: contactState.info,
 }));
-const steps = [
-  {
-    label: "Flight details",
-  },
-  {
-    label: "Contact information",
-  },
-];
 
 function confirmSubmission() {
   isSubmitting.value = false;
@@ -246,7 +239,6 @@ const flightRules = {
     greaterThan,
   },
   returnDate: {
-    required: requiredIf(isRoundTrip),
     lowerThan,
   },
 };
@@ -321,8 +313,7 @@ const departureDateErrors = computed(() => {
 const returnDateErrors = computed(() => {
   const errors = [];
   if (!vFlight$.value.returnDate.$dirty) return errors;
-  vFlight$.value.returnDate.required.$invalid &&
-    errors.push("No return date specified");
+
   vFlight$.value.returnDate.lowerThan.$invalid &&
     errors.push(
       "Your return date must be the same day or after your departure"
@@ -416,7 +407,7 @@ onMounted(() => {
 <template>
   <form class="form" ref="form" @submit.prevent="submit">
     <div class="form__top">
-      <div class="form__top__custom-field">
+      <!-- <div class="form__top__custom-field">
         <button
           class="form__top__custom-field__button"
           :class="{
@@ -455,7 +446,7 @@ onMounted(() => {
           />
           Round trip
         </button>
-      </div>
+      </div> -->
     </div>
     <div class="form__fields">
       <template v-if="currentStep === 0">
@@ -547,18 +538,23 @@ onMounted(() => {
             time-picker-inline
             minutes-increment="30"
             placeholder="Departure date"
+            :min-date="new Date()"
             :startTime="{ hours: 8, minutes: 0 }"
           ></VueDatePicker>
         </div>
         <div
           class="form__fields__wrapper--row"
-          style="
-            min-width: 210px;
-            max-width: 210px;
-            flex-direction: column;
-            align-items: flex-start;
-          "
-          v-if="isRoundTrip"
+          :style="{
+            minWidth: '210px',
+            maxWidth: '210px',
+            flexDirection: 'column',
+            alignItems: 'flex-start',
+            outline: flightState.returnDate
+              ? 'none'
+              : `2px dashed ${colors['secondary-color-faded']}`,
+            borderRadius: '32px',
+            outlineOffset: flightState.returnDate ? '0px' : '-1px',
+          }"
         >
           <VueDatePicker
             v-model="flightState.returnDate"
@@ -567,7 +563,7 @@ onMounted(() => {
             no-today
             time-picker-inline
             minutes-increment="30"
-            placeholder="Return date"
+            placeholder="Add a return date"
             :min-date="minReturnDate"
             :startTime="{ hours: 8, minutes: 0 }"
           ></VueDatePicker>
@@ -625,13 +621,7 @@ onMounted(() => {
             name="lastName"
           />
         </div>
-        <!-- <div
-          class="error"
-          style="margin-top: -0.5rem"
-          v-if="firstNameAndLastNameErrors[0]"
-        >
-          {{ firstNameAndLastNameErrors[0] }}
-        </div> -->
+
         <div class="form__fields__wrapper__not-relative">
           <InputField
             v-model="contactState.email"
@@ -711,13 +701,6 @@ onMounted(() => {
             name="phoneNumber"
           />
         </div>
-        <!-- <div
-          class="error"
-          style="margin-top: -0.5rem"
-          v-if="phoneNumberErrors[0]"
-        >
-          {{ phoneNumberErrors[0] }}
-        </div> -->
 
         <InputField
           v-model="contactState.info"
@@ -957,7 +940,7 @@ onMounted(() => {
           flex-direction: column;
           grid-column: span 2;
           background-color: $primary-color;
-          border-radius: $radius $radius 0 0;
+          border-radius: calc($radius / 2);
           max-height: 200px;
           width: 100%;
           overflow-y: scroll;
@@ -965,8 +948,7 @@ onMounted(() => {
           z-index: 1;
           box-shadow: $shadow;
           position: absolute;
-          bottom: 26px;
-          padding: 0 0 1rem 0;
+          bottom: 54px;
 
           &__result {
             display: flex;
@@ -974,9 +956,10 @@ onMounted(() => {
             padding: 1rem;
             gap: 0.5rem;
             transition: background-color 0.4s ease;
+            flex-direction: column;
 
             &:hover {
-              background-color: $secondary-color-faded;
+              background-color: $sky-color-faded;
             }
 
             &__flag {

@@ -112,9 +112,8 @@ function onError(e: Event) {
         <NuxtLink
           class="button-primary--dark rounded-button"
           to="/booking"
-          v-if="desktopScreen"
           style="z-index: 1"
-          >Booking</NuxtLink
+          >{{ !desktopScreen ? "Fly" : "Booking" }}</NuxtLink
         >
 
         <NuxtLink class="index__banner__headlines__logo" to="/">
@@ -285,12 +284,16 @@ function onError(e: Event) {
         inset: 2rem;
         bottom: inherit;
         gap: 2rem;
-        padding-right: 12rem;
+        padding-right: 11rem;
+        justify-content: space-between;
       }
 
       &__logo {
         width: fit-content;
         height: fit-content;
+        position: absolute;
+        left: 0;
+        right: 0;
         margin: auto;
         z-index: 1;
 

@@ -302,7 +302,10 @@ const breadcrumbs = [
   }
 
   & h2 {
+    font-size: 1rem;
+
     @media (min-width: $big-tablet-screen) {
+      font-size: $subtitles;
       margin-top: -1rem;
     }
   }

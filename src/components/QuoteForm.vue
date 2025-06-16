@@ -1,6 +1,5 @@
 <script setup>
-import { ref, reactive, onMounted, watch } from "vue";
-// import airports from "@/utils/airports.json";
+import { ref, reactive, onMounted, computed } from "vue";
 import phoneCodes from "@/utils/phoneCodes.json";
 import dayjs from "dayjs";
 import { useVuelidate } from "@vuelidate/core";
@@ -78,6 +77,10 @@ const formattedReturnDate = computed(() => {
     return "";
   }
   return dayjs(flightState.returnDate).format("MMMM DD, YYYY [at] h:mm A");
+});
+
+const minReturnDate = computed(() => {
+  return flightState.departureDate ? new Date(flightState.departureDate) : null;
 });
 
 const templateParams = computed(() => ({
@@ -539,6 +542,7 @@ onMounted(() => {
             time-picker-inline
             minutes-increment="30"
             placeholder="Departure date"
+            :min-date="new Date()"
             :startTime="{ hours: 8, minutes: 0 }"
           ></VueDatePicker>
         </div>
@@ -614,15 +618,6 @@ onMounted(() => {
           {{ passengersErrors[0] }}
         </div>
         <div class="form__fields__wrapper--row" v-if="isRoundTrip">
-          <!-- <InputField
-            v-model="flightState.returnDate"
-            id="returnDate"
-            label="Return date"
-            type="datetime-local"
-            placeholder="YYYY-MM-DD"
-            icon="calendar_tomorrow"
-            name="returnDate"
-          /> -->
           <VueDatePicker
             v-model="flightState.returnDate"
             model-type="yyyy-MM-dd'T'HH:mm"
@@ -631,6 +626,7 @@ onMounted(() => {
             time-picker-inline
             minutes-increment="30"
             placeholder="Return date"
+            :min-date="minReturnDate"
             :startTime="{ hours: 8, minutes: 0 }"
           ></VueDatePicker>
         </div>

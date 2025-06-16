@@ -3,6 +3,8 @@ import { ref } from "vue";
 import { colors } from "@/utils/colors";
 import partnerships from "@/assets/images/menu/partnerships.webp";
 import { onClickOutside } from "@vueuse/core";
+import { useRouter } from "vue-router";
+import { isMobile } from "@/utils/functions";
 
 import ourStory from "@/assets/images/menu/our-story.webp";
 import ourFleet from "@/assets/images/menu/our-fleet.webp";
@@ -24,11 +26,7 @@ import news from "@/assets/images/menu/news.webp";
 import testimonials from "@/assets/images/menu/testimonials.webp";
 import events from "@/assets/images/menu/events.webp";
 import destinations from "@/assets/images/menu/destinations.webp";
-import lightJet from "@/assets/images/aircraft/lightjet-sofar.svg";
-import midsizeJet from "@/assets/images/aircraft/midsize-jet-sofar.svg";
-import superMidsizeJet from "@/assets/images/aircraft/super-midsize-jet-sofar.svg";
-import heavyJet from "@/assets/images/aircraft/heavy-jet-sofar.svg";
-import ultraLongHaulJet from "@/assets/images/aircraft/ultra-long-haul-jet.svg";
+import family from "@/assets/images/menu/family.webp";
 
 interface MenuItem {
   label: string;
@@ -45,6 +43,7 @@ interface MenuChildren {
 }
 
 const isMenuOpen = ref(false);
+const isIconVisible = ref(true);
 const selectedMenuItem = ref<MenuItem | null>(null);
 
 const target = ref<HTMLElement | null>(null);
@@ -52,6 +51,8 @@ const target = ref<HTMLElement | null>(null);
 onClickOutside(target, () => (isMenuOpen.value = false), {
   ignore: [".menu", ".burger-menu"],
 });
+
+const router = useRouter();
 
 const menuItems = [
   {
@@ -132,6 +133,7 @@ const menuItems = [
         label: "Family jet charter",
         link: "/services/family-jet-charters",
         alt: "private jet family jet charters",
+        image: family,
       },
     ],
   },
@@ -263,29 +265,55 @@ const menuItems = [
     alt: "private jet contact",
   },
 ];
+
+if (isMobile()) {
+  menuItems.shift();
+  //booking does not appear on mobile
+}
+
+router.afterEach(() => {
+  setTimeout(() => {
+    isMenuOpen.value = false;
+    selectedMenuItem.value = null;
+  }, 1000);
+});
+
+let lastScrollTop = 0;
+
+window.addEventListener("scroll", function () {
+  let st = window.pageYOffset || document.documentElement.scrollTop;
+  if (st > window.innerHeight / 2 && st > lastScrollTop) {
+    isIconVisible.value = false;
+  } else if (st > window.innerHeight / 2 && st < lastScrollTop) {
+    isIconVisible.value = true;
+  }
+  lastScrollTop = st <= 0 ? 0 : st;
+});
 </script>
 <template>
-  <span
-    ref="target"
-    class="burger-menu"
-    tabindex="0"
-    @click="isMenuOpen = !isMenuOpen"
-    @keyup.enter="isMenuOpen = !isMenuOpen"
-  >
-    <IconComponent
-      v-if="!isMenuOpen"
-      icon="menu"
-      size="1.5rem"
-      :color="colors['primary-color']"
-    />
-    <IconComponent
-      v-else
-      icon="add"
-      size="2rem"
-      :color="colors['primary-color']"
-      :style="{ transform: isMenuOpen ? 'rotate(45deg)' : 'rotate(0deg)' }"
-    />
-  </span>
+  <Transition>
+    <span
+      v-show="isIconVisible"
+      ref="target"
+      class="burger-menu"
+      tabindex="0"
+      @click="isMenuOpen = !isMenuOpen"
+      @keyup.enter="isMenuOpen = !isMenuOpen"
+    >
+      <IconComponent
+        v-if="!isMenuOpen"
+        icon="menu"
+        size="1.5rem"
+        :color="colors['primary-color']"
+      />
+      <IconComponent
+        v-else
+        icon="add"
+        size="2rem"
+        :color="colors['primary-color']"
+        :style="{ transform: isMenuOpen ? 'rotate(45deg)' : 'rotate(0deg)' }"
+      /> </span
+  ></Transition>
   <Transition>
     <aside class="menu" v-if="isMenuOpen">
       <nav class="menu__nav">
@@ -355,24 +383,18 @@ const menuItems = [
 <style scoped lang="scss">
 .burger-menu {
   position: fixed;
-  top: 1rem;
+  top: 1.65rem;
   right: 1rem;
   z-index: 1000;
-  background-color: $secondary-color;
-  padding: 0.5rem;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 3rem;
-  height: 3rem;
+  mix-blend-mode: difference;
 
   @media (min-width: $big-tablet-screen) {
-    padding: 2rem;
-    top: 2rem;
+    top: 2.5rem;
     right: 4rem;
-    width: 4rem;
-    height: 4rem;
   }
 }
 
